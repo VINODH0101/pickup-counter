@@ -39,6 +39,48 @@ export const SEED_SNACKS: readonly SeedProduct[] = [
     price_paise: 1500, // ₹15
     stock_units: 10,
   },
+  {
+    id: "00000000-0000-4000-8000-000000000006",
+    name: "Roasted Almonds & Cashews",
+    price_paise: 6500, // ₹65
+    stock_units: 10,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000007",
+    name: "Artisanal Dark Chocolate 72%",
+    price_paise: 8500, // ₹85
+    stock_units: 8,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000008",
+    name: "Sparkling Berry Kombucha",
+    price_paise: 7500, // ₹75
+    stock_units: 6,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000009",
+    name: "Truffle Potato Crisps",
+    price_paise: 4500, // ₹45
+    stock_units: 12,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000010",
+    name: "Cold Brew Nitro Coffee",
+    price_paise: 8000, // ₹80
+    stock_units: 8,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000011",
+    name: "Roasted Peri-Peri Makhana",
+    price_paise: 4000, // ₹40
+    stock_units: 15,
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000012",
+    name: "Organic Granola Honey Bar",
+    price_paise: 3500, // ₹35
+    stock_units: 10,
+  },
 ];
 
 export async function seedDatabase(customPool?: Pool): Promise<void> {

@@ -41,7 +41,7 @@ describe("Products & Orders API Integration Tests", () => {
 
       const products: any = await res.json();
       expect(Array.isArray(products)).toBe(true);
-      expect(products.length).toBe(5);
+      expect(products.length).toBeGreaterThanOrEqual(5);
 
       const chips = products.find((p: any) => p.name === "Chips");
       expect(chips).toBeDefined();

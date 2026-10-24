@@ -1,5 +1,6 @@
 import type { CartItem } from "../types";
 import { formatPaise } from "../utils/format";
+import { getProductMeta } from "../utils/productMeta";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -28,122 +29,175 @@ export function CartDrawer({
     (sum, item) => sum + item.product.price_paise * item.quantity,
     0,
   );
+  const totalItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="cart-backdrop" onClick={onClose} role="presentation">
       <div
-        className="cart-panel"
+        className="premium-cart-drawer"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-labelledby="cart-title"
         aria-modal="true"
       >
-        <div className="cart-header">
-          <h2 id="cart-title">Your Snack Cart</h2>
+        <div className="cart-drawer-header">
+          <div className="cart-drawer-title-group">
+            <h2 id="cart-title" className="cart-heading">Your Locker Cart</h2>
+            <span className="cart-item-count-chip">{totalItemCount} items</span>
+          </div>
           <button
-            className="close-btn"
+            className="drawer-close-btn"
             onClick={onClose}
-            aria-label="Close cart"
+            aria-label="Close cart panel"
           >
             ✕
           </button>
         </div>
 
         {error && (
-          <div className="alert alert-error" role="alert">
-            <span className="alert-icon">⚠️</span>
-            <div className="alert-body">
-              <strong>Order Failed:</strong> {error}
+          <div className="cart-error-banner" role="alert">
+            <span className="error-icon">⚠️</span>
+            <div className="error-text">
+              <strong>Reservation Error:</strong> {error}
             </div>
           </div>
         )}
 
         {items.length === 0 ? (
-          <div className="cart-empty">
-            <span className="empty-emoji">🛒</span>
-            <p>Your cart is empty.</p>
-            <button className="btn btn-secondary" onClick={onClose}>
-              Browse Snacks
+          <div className="cart-empty-stage">
+            <div className="empty-cart-halo">
+              <span className="empty-cart-icon">🛒</span>
+            </div>
+            <h3 className="empty-title">Your locker tray is empty</h3>
+            <p className="empty-sub">
+              Browse the snack selection and add your favorites to reserve them in the locker counter.
+            </p>
+            <button className="btn btn-browse-action" onClick={onClose}>
+              Browse Snack Vault
             </button>
           </div>
         ) : (
           <>
-            <div className="cart-items-list">
+            <div className="cart-items-scrollable">
               {items.map(({ product, quantity }) => {
                 const itemTotal = product.price_paise * quantity;
+                const meta = getProductMeta(product.name);
+                const canAddMore = quantity < product.available_units;
+
                 return (
-                  <div key={product.id} className="cart-item-row">
-                    <div className="cart-item-details">
-                      <h3 className="cart-item-name">{product.name}</h3>
-                      <span className="cart-item-unit-price">
-                        {formatPaise(product.price_paise)} each
-                      </span>
+                  <div key={product.id} className="cart-item-card">
+                    <div className="cart-item-thumb">
+                      <span className="cart-item-emoji">{meta.emoji}</span>
                     </div>
 
-                    <div className="cart-item-actions">
-                      <div className="quantity-controls" role="group" aria-label={`Quantity controls for ${product.name}`}>
-                        <button
-                          className="qty-btn"
-                          onClick={() => onUpdateQuantity(product.id, quantity - 1)}
-                          aria-label={`Decrease quantity of ${product.name}`}
-                        >
-                          −
-                        </button>
-                        <span className="qty-value">{quantity}</span>
-                        <button
-                          className="qty-btn"
-                          onClick={() => onUpdateQuantity(product.id, quantity + 1)}
-                          disabled={quantity >= product.available_units}
-                          aria-label={`Increase quantity of ${product.name}`}
-                        >
-                          +
-                        </button>
+                    <div className="cart-item-info">
+                      <div className="cart-item-header">
+                        <h4 className="cart-item-name">{product.name}</h4>
+                        <span className="cart-item-line-total">
+                          {formatPaise(itemTotal)}
+                        </span>
                       </div>
 
-                      <span className="cart-item-subtotal">
-                        {formatPaise(itemTotal)}
-                      </span>
+                      <div className="cart-item-meta">
+                        <span className="cart-item-unit-cost">
+                          {formatPaise(product.price_paise)} each
+                        </span>
+                        <span className="cart-item-locker-limit">
+                          ({product.available_units} in locker)
+                        </span>
+                      </div>
+
+                      <div className="cart-item-stepper-wrap">
+                        <div
+                          className="cart-stepper"
+                          role="group"
+                          aria-label={`Quantity selector for ${product.name}`}
+                        >
+                          <button
+                            className="stepper-btn stepper-minus"
+                            onClick={() =>
+                              onUpdateQuantity(product.id, quantity - 1)
+                            }
+                            aria-label={`Decrease quantity of ${product.name}`}
+                          >
+                            −
+                          </button>
+                          <span className="stepper-qty" aria-live="polite">
+                            {quantity}
+                          </span>
+                          <button
+                            className="stepper-btn stepper-plus"
+                            onClick={() =>
+                              onUpdateQuantity(product.id, quantity + 1)
+                            }
+                            disabled={!canAddMore}
+                            aria-label={`Increase quantity of ${product.name}`}
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        {quantity >= product.available_units && (
+                          <span className="max-stock-notice">Locker limit reached</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <div className="cart-footer">
-              <div className="cart-summary-row">
-                <span className="summary-label">Estimated Total:</span>
-                <span className="summary-total">{formatPaise(totalPaise)}</span>
+            <div className="cart-drawer-footer">
+              <div className="checkout-summary-box">
+                <div className="summary-line">
+                  <span className="summary-text">Subtotal</span>
+                  <span className="summary-num">{formatPaise(totalPaise)}</span>
+                </div>
+                <div className="summary-line">
+                  <span className="summary-text">Contactless Locker Dispense</span>
+                  <span className="summary-badge-free">COMPLIMENTARY</span>
+                </div>
+                <div className="summary-line">
+                  <span className="summary-text">Stock Hold Reservation</span>
+                  <span className="summary-val">120 Seconds Guaranteed</span>
+                </div>
+                <div className="summary-divider"></div>
+                <div className="summary-line summary-grand-total">
+                  <span className="total-label">Estimated Total</span>
+                  <span className="total-amount">{formatPaise(totalPaise)}</span>
+                </div>
               </div>
-              <p className="summary-note">
-                Final total and a 120-second stock hold will be confirmed by the server upon checkout.
-              </p>
 
-              <div className="cart-action-buttons">
+              <div className="drawer-actions-row">
                 <button
-                  className="btn btn-secondary clear-btn"
+                  className="btn btn-clear-cart"
                   onClick={onClearCart}
                   disabled={isSubmitting}
                 >
-                  Clear
+                  Clear Tray
                 </button>
                 <button
-                  className="btn btn-primary checkout-btn"
+                  className="btn btn-primary btn-checkout-action"
                   onClick={onCheckout}
                   disabled={isSubmitting || items.length === 0}
                 >
                   {isSubmitting ? (
-                    <>
-                      <span className="spinner"></span> Reserving...
-                    </>
+                    <span className="checkout-spinner-wrap">
+                      <span className="spinner-beacon"></span> Reserving Locker...
+                    </span>
                   ) : (
-                    `Reserve & Pay (${formatPaise(totalPaise)})`
+                    <span>Reserve & Checkout • {formatPaise(totalPaise)}</span>
                   )}
                 </button>
               </div>
+
+              <p className="footer-disclaimer">
+                🔒 PostgreSQL transactional row lock secures your hold immediately upon checkout.
+              </p>
             </div>
           </>
         )}
       </div>
     </div>
   );
-};
+}
