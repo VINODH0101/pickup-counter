@@ -4,6 +4,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   PORT: z.coerce.number().int().positive().default(3001),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  PAYMENT_WEBHOOK_SECRET: z.string().default("pickup_counter_dev_webhook_secret_key"),
 });
 
 export type Env = z.infer<typeof envSchema>;
