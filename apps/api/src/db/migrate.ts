@@ -48,3 +48,14 @@ export async function runMigrations(): Promise<void> {
     client.release();
   }
 }
+
+export async function resetDatabase(customPool?: ReturnType<typeof getPool>): Promise<void> {
+  const pool = customPool ?? getPool();
+  const client = await pool.connect();
+  try {
+    await client.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
+  } finally {
+    client.release();
+  }
+}
+

@@ -1,2 +1,2 @@
--- Created on first Postgres container start. Later schema lives in SQL migrations.
-CREATE DATABASE pickup_counter_test;
+SELECT 'CREATE DATABASE pickup_counter_test'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'pickup_counter_test')\gexec
