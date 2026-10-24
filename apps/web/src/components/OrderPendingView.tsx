@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { simulatePayment } from "../api/client";
 import { useOrderCountdown } from "../hooks/useOrderCountdown";
 import type { Order } from "../types";
 import { formatPaise, formatSeconds } from "../utils/format";
@@ -18,6 +19,8 @@ export function OrderPendingView({
 }: OrderPendingViewProps) {
   const [copiedOrderId, setCopiedOrderId] = useState(false);
   const [copiedCommand, setCopiedCommand] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationMsg, setSimulationMsg] = useState<string | null>(null);
 
   // Accurate monotonic countdown using performance.now()
   const secondsLeft = useOrderCountdown(order.expiresInSeconds, onRefreshOrder);
@@ -36,6 +39,20 @@ export function OrderPendingView({
     navigator.clipboard.writeText(webhookCommand);
     setCopiedCommand(true);
     setTimeout(() => setCopiedCommand(false), 2000);
+  };
+
+  const handleSimulateWebhook = async () => {
+    setIsSimulating(true);
+    setSimulationMsg(null);
+    try {
+      await simulatePayment(order.id, order.totalPaise, "captured");
+      setSimulationMsg("Signed webhook dispatched! Awaiting poll confirmation...");
+      onRefreshOrder();
+    } catch (err: any) {
+      setSimulationMsg(`Simulation error: ${err.message}`);
+    } finally {
+      setIsSimulating(false);
+    }
   };
 
   return (
@@ -99,11 +116,11 @@ export function OrderPendingView({
           <div className="copy-row">
             <code className="detail-code">{order.id}</code>
             <button
-              className="btn btn-secondary btn-small copy-btn"
+              className="btn-copy-small"
               onClick={handleCopyOrderId}
               aria-label="Copy order ID"
             >
-              {copiedOrderId ? "Copied!" : "Copy ID"}
+              {copiedOrderId ? "✓ Copied" : "Copy ID"}
             </button>
           </div>
         </div>
@@ -133,53 +150,119 @@ export function OrderPendingView({
         </ul>
       </div>
 
-      {/* Simulated Payment Instruction (No frontend button marking order paid!) */}
+      {/* Styled Simulated Payment Instruction & Developer Terminal */}
       <div className="payment-simulation-box">
-        <div className="simulation-info">
-          <h4>Simulated Payment Instruction</h4>
-          <p>
-            The backend only authorizes state transitions via verified
-            HMAC-SHA256 signed webhooks. Run this simulator command in your
-            terminal:
-          </p>
+        <div className="sim-box-header">
+          <div className="sim-badge-group">
+            <span className="sim-cli-icon">&gt;_</span>
+            <h4 className="sim-heading">Simulated Payment Instruction</h4>
+          </div>
+          <span className="sim-security-badge">HMAC-SHA256 SIGNED</span>
         </div>
 
-        <div className="command-box">
-          <code className="terminal-command">{webhookCommand}</code>
+        <p className="sim-subtext">
+          The backend only authorizes state transitions via verified
+          HMAC-SHA256 signed webhooks. Run this simulator command in your
+          terminal:
+        </p>
+
+        {/* Terminal Deck */}
+        <div className="command-deck-container">
+          <div className="terminal-top-bar">
+            <div className="terminal-dots" aria-hidden="true">
+              <span className="dot dot-red"></span>
+              <span className="dot dot-yellow"></span>
+              <span className="dot dot-green"></span>
+            </div>
+            <span className="terminal-title">bash — pickup-counter</span>
+            <button
+              className={`btn btn-copy-terminal ${copiedCommand ? "is-copied" : ""}`}
+              onClick={handleCopyCommand}
+              aria-label="Copy command to clipboard"
+            >
+              {copiedCommand ? (
+                <>
+                  <span className="copy-check">✓</span>
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span>Copy Command</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="terminal-body">
+            <span className="terminal-prompt">$</span>
+            <code className="terminal-command-text">
+              <span className="cmd-keyword">npm run send-webhook</span> -- --order-id{" "}
+              <span className="cmd-id">{order.id}</span>
+            </code>
+          </div>
+        </div>
+
+        {/* Quick Instant Test Trigger */}
+        <div className="quick-sim-trigger-row">
+          <span className="quick-sim-hint">Or test with one click in browser:</span>
           <button
-            className="btn btn-secondary btn-small copy-btn"
-            onClick={handleCopyCommand}
-            aria-label="Copy webhook terminal command"
+            className="btn btn-quick-simulate"
+            onClick={handleSimulateWebhook}
+            disabled={isSimulating || isExpired}
           >
-            {copiedCommand ? "Copied!" : "Copy Command"}
+            {isSimulating ? (
+              <span className="sim-btn-spinner">Dispatching...</span>
+            ) : (
+              <span>⚡ Send Signed Test Webhook</span>
+            )}
           </button>
         </div>
+
+        {simulationMsg && (
+          <div className="simulation-feedback-alert">
+            <span className="sim-feedback-icon">ℹ️</span>
+            <span>{simulationMsg}</span>
+          </div>
+        )}
       </div>
 
       <div className="pending-actions">
         {isExpired ? (
           <button
-            className="btn btn-primary btn-large"
+            className="btn btn-primary btn-large btn-return-action"
             onClick={onCancelToCatalog}
           >
             Return to Menu & Re-order
           </button>
         ) : (
-          <>
-            <div className="polling-status-footer">
-              <span className="pulse-indicator"></span>
+          <div className="pending-bottom-bar">
+            <div className="polling-status-pill">
+              <span className="status-live-beacon"></span>
               <span className="polling-text">
-                Polling order status every 1.5s... (Will update immediately upon
-                webhook capture)
+                Polling order status every 1.5s... (Will update immediately upon webhook capture)
               </span>
             </div>
+
             <button
-              className="btn btn-secondary cancel-link"
+              className="btn btn-back-catalog"
               onClick={onCancelToCatalog}
             >
-              Back to Catalog
+              ← Back to Catalog
             </button>
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { Product } from "../types";
 import { formatPaise } from "../utils/format";
+import { getProductMeta } from "../utils/productMeta";
 
 interface ProductCardProps {
   product: Product;
@@ -14,82 +16,119 @@ export function ProductCard({
   onAddToCart,
   onUpdateQuantity,
 }: ProductCardProps) {
+  const [imageError, setImageError] = useState(false);
   const isOutOfStock = product.available_units <= 0;
   const canAddMore = cartQuantity < product.available_units;
-
-  // Visual emoji mapped to snack names
-  const getEmoji = (name: string) => {
-    const lower = name.toLowerCase();
-    if (lower.includes("water")) return "💧";
-    if (lower.includes("chip")) return "🥔";
-    if (lower.includes("choc")) return "🍫";
-    if (lower.includes("cook")) return "🍪";
-    if (lower.includes("juice")) return "🧃";
-    return "🥨";
-  };
+  const meta = getProductMeta(product.name);
 
   return (
-    <article className={`product-card ${isOutOfStock ? "out-of-stock" : ""}`}>
-      <div className="product-media" aria-hidden="true">
-        <span className="product-emoji">{getEmoji(product.name)}</span>
+    <article
+      className={`premium-product-card glow-${meta.glowColor} ${
+        isOutOfStock ? "is-sold-out" : ""
+      } ${cartQuantity > 0 ? "has-cart-items" : ""}`}
+    >
+      {/* Product Image Stage with Curated Photography */}
+      <div className="product-media-frame">
+        {!imageError ? (
+          <img
+            src={meta.imageUrl}
+            alt={product.name}
+            className="product-food-photo"
+            loading="lazy"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="product-visual-stage">
+            <span className="product-icon-display">{meta.emoji}</span>
+          </div>
+        )}
+        <div className="media-overlay-gradient"></div>
+
+        {/* Floating Badges Over Image */}
+        <div className="media-top-chips">
+          <span className="card-category-badge">{meta.category}</span>
+          <span className="card-tag-pill">{meta.tag}</span>
+        </div>
       </div>
 
-      <div className="product-info">
-        <div className="product-header">
-          <h2 className="product-name">{product.name}</h2>
-          <span className="product-price">{formatPaise(product.price_paise)}</span>
+      <div className="card-content">
+        <div className="card-header-group">
+          <h3 className="card-product-title">{product.name}</h3>
+          <p className="card-product-desc">{meta.description}</p>
         </div>
 
-        <div className="stock-status-row">
-          {isOutOfStock ? (
-            <span className="stock-badge badge-empty">Out of Stock</span>
-          ) : (
-            <span
-              className={`stock-badge ${
-                product.available_units <= 3 ? "badge-low" : "badge-available"
-              }`}
-            >
-              {product.available_units} available in locker
-            </span>
-          )}
-        </div>
-
-        <div className="product-actions">
-          {cartQuantity === 0 ? (
-            <button
-              className="btn btn-primary add-btn"
-              onClick={() => onAddToCart(product)}
-              disabled={isOutOfStock}
-              aria-label={`Add ${product.name} to cart for ${formatPaise(
-                product.price_paise,
-              )}`}
-            >
-              {isOutOfStock ? "Sold Out" : "Add to Cart"}
-            </button>
-          ) : (
-            <div className="quantity-controls" role="group" aria-label={`Quantity controls for ${product.name}`}>
-              <button
-                className="qty-btn"
-                onClick={() => onUpdateQuantity(product.id, cartQuantity - 1)}
-                aria-label={`Decrease quantity of ${product.name}`}
-              >
-                −
-              </button>
-              <span className="qty-value" aria-live="polite">
-                {cartQuantity}
+        <div className="card-meta-row">
+          <div className="stock-meter">
+            {isOutOfStock ? (
+              <span className="stock-status-pill out-of-stock">
+                <span className="stock-dot dot-red"></span> Sold Out
               </span>
+            ) : product.available_units <= 3 ? (
+              <span className="stock-status-pill low-stock">
+                <span className="stock-dot dot-amber pulse-anim"></span> Only {product.available_units} left
+              </span>
+            ) : (
+              <span className="stock-status-pill in-stock">
+                <span className="stock-dot dot-green"></span> {product.available_units} in locker
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="card-purchase-row">
+          <div className="price-tag-container">
+            <span className="price-tag-sub">PRICE</span>
+            <span className="price-tag-value">{formatPaise(product.price_paise)}</span>
+          </div>
+
+          <div className="card-action-wrapper">
+            {cartQuantity === 0 ? (
               <button
-                className="qty-btn"
-                onClick={() => onUpdateQuantity(product.id, cartQuantity + 1)}
-                disabled={!canAddMore}
-                aria-label={`Increase quantity of ${product.name}`}
+                className="btn btn-add-cart"
+                onClick={() => onAddToCart(product)}
+                disabled={isOutOfStock}
+                aria-label={`Add ${product.name} to cart for ${formatPaise(
+                  product.price_paise,
+                )}`}
               >
-                +
+                {isOutOfStock ? (
+                  "Sold Out"
+                ) : (
+                  <>
+                    <span className="add-plus-icon">+</span>
+                    <span>Add</span>
+                  </>
+                )}
               </button>
-            </div>
-          )}
+            ) : (
+              <div
+                className="card-stepper"
+                role="group"
+                aria-label={`Quantity selector for ${product.name}`}
+              >
+                <button
+                  className="stepper-btn stepper-minus"
+                  onClick={() => onUpdateQuantity(product.id, cartQuantity - 1)}
+                  aria-label={`Decrease quantity of ${product.name}`}
+                >
+                  −
+                </button>
+                <span className="stepper-count" aria-live="polite">
+                  {cartQuantity}
+                </span>
+                <button
+                  className="stepper-btn stepper-plus"
+                  onClick={() => onUpdateQuantity(product.id, cartQuantity + 1)}
+                  disabled={!canAddMore}
+                  aria-label={`Increase quantity of ${product.name}`}
+                >
+                  +
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </article>
   );
-};
+}

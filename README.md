@@ -344,15 +344,22 @@ Migrations are SQL files tracked in the `schema_migrations` table. They execute 
 | [`001_init.sql`](file:///apps/api/migrations/001_init.sql) | Enables `pgcrypto` extension for native UUID generation (`gen_random_uuid()`). |
 | [`002_create_schema.sql`](file:///apps/api/migrations/002_create_schema.sql) | Creates `products`, `orders`, `order_items`, `payment_events`, `pickup_claims` tables and constraints. |
 
-### Deterministic Seed Data (5 Snacks)
+### Deterministic Seed Data (12 Curated Snacks)
 
-| Product Name | Price (Paise) | Price (₹) | Initial Stock | Deterministic UUID |
-| :--- | :---: | :---: | :---: | :--- |
-| **Chips** | 2000 | ₹20.00 | 10 | `00000000-0000-4000-8000-000000000001` |
-| **Cookies** | 3000 | ₹30.00 | 8 | `00000000-0000-4000-8000-000000000002` |
-| **Chocolate bar** | 2500 | ₹25.00 | 12 | `00000000-0000-4000-8000-000000000003` |
-| **Juice** | 4500 | ₹45.00 | 6 | `00000000-0000-4000-8000-000000000004` |
-| **Water bottle** | 1500 | ₹15.00 | 10 | `00000000-0000-4000-8000-000000000005` |
+| Product Name | Category | Price (Paise) | Price (₹) | Initial Stock | Deterministic UUID |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **Chips** | Savory & Crisps | 2000 | ₹20.00 | 10 | `00000000-0000-4000-8000-000000000001` |
+| **Cookies** | Chocolates & Sweets | 3000 | ₹30.00 | 8 | `00000000-0000-4000-8000-000000000002` |
+| **Chocolate bar** | Chocolates & Sweets | 2500 | ₹25.00 | 12 | `00000000-0000-4000-8000-000000000003` |
+| **Juice** | Cold Beverages | 4500 | ₹45.00 | 6 | `00000000-0000-4000-8000-000000000004` |
+| **Water bottle** | Cold Beverages | 1500 | ₹15.00 | 10 | `00000000-0000-4000-8000-000000000005` |
+| **Roasted Almonds & Cashews** | Healthy & Energy | 6500 | ₹65.00 | 10 | `00000000-0000-4000-8000-000000000006` |
+| **Artisanal Dark Chocolate 72%** | Chocolates & Sweets | 8500 | ₹85.00 | 8 | `00000000-0000-4000-8000-000000000007` |
+| **Sparkling Berry Kombucha** | Cold Beverages | 7500 | ₹75.00 | 6 | `00000000-0000-4000-8000-000000000008` |
+| **Truffle Potato Crisps** | Savory & Crisps | 4500 | ₹45.00 | 12 | `00000000-0000-4000-8000-000000000009` |
+| **Cold Brew Nitro Coffee** | Cold Beverages | 8000 | ₹80.00 | 8 | `00000000-0000-4000-8000-000000000010` |
+| **Roasted Peri-Peri Makhana** | Healthy & Energy | 4000 | ₹40.00 | 15 | `00000000-0000-4000-8000-000000000011` |
+| **Organic Granola Honey Bar** | Healthy & Energy | 3500 | ₹35.00 | 10 | `00000000-0000-4000-8000-000000000012` |
 
 ### Seeding Safety on Restart
 Seeding uses `ON CONFLICT (id) DO NOTHING`. Restarting the API container or database re-runs seeds idempotently without overwriting decremented stock or wiping active customer purchases.
