@@ -1,0 +1,44 @@
+{
+  "name": "pickup-counter",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "npm run dev -w @pickup-counter/api",
+    "dev:web": "npm run dev -w @pickup-counter/web",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:concurrency": "npm run test:concurrency -w @pickup-counter/api",
+    "migrate": "npm run migrate -w @pickup-counter/api",
+    "seed": "npm run seed -w @pickup-counter/api",
+    "verify:schema": "npm run verify:schema -w @pickup-counter/api",
+    "verify:stage5": "npm run verify:stage5 -w @pickup-counter/api",
+    "verify:stage7": "npm run verify:stage7 -w @pickup-counter/api",
+    "verify:e2e": "npm run verify:e2e -w @pickup-counter/api",
+    "verify:fresh-start": "npm run verify:fresh-start -w @pickup-counter/api",
+    "send-webhook": "npm run send-webhook -w @pickup-counter/api",
+    "webhook:send": "npm run send-webhook -w @pickup-counter/api",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "~5.9.3"
+  },
+  "overrides": {
+    "esbuild": "^0.25.0",
+    "tinypool": "^2.2.0",
+    "vite": "^6.4.5"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.25.12": true
+  }
+}

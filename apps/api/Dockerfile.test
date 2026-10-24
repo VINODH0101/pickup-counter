@@ -1,0 +1,17 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+ENV NODE_ENV=test
+
+COPY package.json package-lock.json ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+
+RUN npm ci
+
+COPY tsconfig.json ./
+COPY apps/api ./apps/api
+COPY apps/web ./apps/web
+
+CMD ["npm", "test"]
