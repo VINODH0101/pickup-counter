@@ -1490,64 +1490,272 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-/* Webhook Simulator Terminal */
-.webhook-simulator-card {
-  background: #06070a;
-  border: 1px solid rgba(229, 195, 120, 0.3);
+/* ==============================================================================
+   SIMULATED PAYMENT INSTRUCTION (CLASSY DEVELOPER TERMINAL)
+   ============================================================================== */
+
+.payment-simulation-box {
+  background: rgba(9, 11, 18, 0.85);
+  border: 1px solid var(--border-gold);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
-  margin-bottom: 1.65rem;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(229, 195, 120, 0.1);
 }
 
-.sim-header {
+.sim-box-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.65rem;
 }
 
-.sim-title {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--gold-main);
-  text-transform: uppercase;
-}
-
-.terminal-box {
-  background: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.95rem;
+.sim-badge-group {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.65rem;
+  gap: 0.6rem;
 }
 
-.terminal-box code {
-  color: #f5e4be;
+.sim-cli-icon {
   font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--gold-main);
+  background: rgba(229, 195, 120, 0.12);
+  border: 1px solid rgba(229, 195, 120, 0.25);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-xs);
+}
+
+.sim-heading {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.sim-security-badge {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--gold-light);
+  background: rgba(229, 195, 120, 0.08);
+  border: 1px solid rgba(229, 195, 120, 0.25);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-xs);
+}
+
+.sim-subtext {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Terminal Command Deck */
+.command-deck-container {
+  background: #030407;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-top-bar {
+  background: rgba(255, 255, 255, 0.035);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 0.45rem 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.terminal-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.terminal-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.terminal-dots .dot-red { background: #ef4444; }
+.terminal-dots .dot-yellow { background: #f59e0b; }
+.terminal-dots .dot-green { background: #10b981; }
+
+.terminal-title {
+  font-size: 0.725rem;
+  font-family: monospace;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+}
+
+.btn-copy-terminal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(229, 195, 120, 0.12);
+  border: 1px solid rgba(229, 195, 120, 0.3);
+  color: var(--gold-light);
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy-terminal:hover {
+  background: rgba(229, 195, 120, 0.25);
+  border-color: var(--gold-main);
+  color: #ffffff;
+}
+
+.btn-copy-terminal.is-copied {
+  background: rgba(52, 211, 153, 0.2);
+  border-color: #34d399;
+  color: #34d399;
+}
+
+.copy-check {
+  font-weight: 800;
   font-size: 0.8rem;
+}
+
+.terminal-body {
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  font-family: "JetBrains Mono", "Fira Code", monospace, Consolas;
+  font-size: 0.835rem;
+  overflow-x: auto;
+}
+
+.terminal-prompt {
+  color: var(--gold-main);
+  font-weight: 800;
+  user-select: none;
+}
+
+.terminal-command-text {
+  color: #e2e8f0;
   word-break: break-all;
 }
 
-.btn-copy-code {
-  background: rgba(229, 195, 120, 0.15);
-  border: 1px solid rgba(229, 195, 120, 0.35);
-  color: var(--gold-main);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.3rem 0.65rem;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  flex-shrink: 0;
+.cmd-keyword {
+  color: #a5f3fc;
+  font-weight: 600;
 }
 
-.sim-explanation {
-  font-size: 0.75rem;
+.cmd-id {
+  color: var(--gold-light);
+  font-weight: 700;
+}
+
+/* Quick Instant Test Trigger */
+.quick-sim-trigger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.quick-sim-hint {
+  font-size: 0.775rem;
   color: var(--text-dim);
-  line-height: 1.4;
+}
+
+.btn-quick-simulate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(229, 195, 120, 0.1);
+  border: 1px solid rgba(229, 195, 120, 0.35);
+  color: var(--gold-main);
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-quick-simulate:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f5e4be 0%, #e5c378 100%);
+  color: #0b0c12;
+  box-shadow: 0 4px 14px rgba(229, 195, 120, 0.3);
+}
+
+.btn-quick-simulate:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.simulation-feedback-alert {
+  margin-top: 0.85rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.775rem;
+  color: #6ee7b7;
+}
+
+/* Pending Bottom Bar: Polling Pill & Back Button */
+.pending-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.polling-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+}
+
+.polling-text {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+}
+
+.btn-back-catalog {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-pearl);
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-back-catalog:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.btn-return-action {
+  width: 100%;
 }
 
 /* Paid & Claim Area */
