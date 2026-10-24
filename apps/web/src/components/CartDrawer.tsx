@@ -87,7 +87,21 @@ export function CartDrawer({
                 return (
                   <div key={product.id} className="cart-item-card">
                     <div className="cart-item-thumb">
-                      <span className="cart-item-emoji">{meta.emoji}</span>
+                      <img
+                        src={meta.imageUrl}
+                        alt={product.name}
+                        className="cart-thumb-img"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                          if (e.currentTarget.nextElementSibling) {
+                            (e.currentTarget.nextElementSibling as HTMLElement).style.display = "block";
+                          }
+                        }}
+                      />
+                      <span className="cart-item-emoji fallback-emoji" style={{ display: "none" }}>
+                        {meta.emoji}
+                      </span>
                     </div>
 
                     <div className="cart-item-info">

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Product } from "../types";
 import { formatPaise } from "../utils/format";
 import { getProductMeta } from "../utils/productMeta";
@@ -15,6 +16,7 @@ export function ProductCard({
   onAddToCart,
   onUpdateQuantity,
 }: ProductCardProps) {
+  const [imageError, setImageError] = useState(false);
   const isOutOfStock = product.available_units <= 0;
   const canAddMore = cartQuantity < product.available_units;
   const meta = getProductMeta(product.name);
@@ -25,14 +27,28 @@ export function ProductCard({
         isOutOfStock ? "is-sold-out" : ""
       } ${cartQuantity > 0 ? "has-cart-items" : ""}`}
     >
-      <div className="card-top-bar">
-        <span className="card-category-badge">{meta.category}</span>
-        <span className="card-tag-pill">{meta.tag}</span>
-      </div>
+      {/* Product Image Stage with Curated Photography */}
+      <div className="product-media-frame">
+        {!imageError ? (
+          <img
+            src={meta.imageUrl}
+            alt={product.name}
+            className="product-food-photo"
+            loading="lazy"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="product-visual-stage">
+            <span className="product-icon-display">{meta.emoji}</span>
+          </div>
+        )}
+        <div className="media-overlay-gradient"></div>
 
-      <div className={`product-visual-stage bg-${meta.glowColor}`} aria-hidden="true">
-        <div className="visual-halo"></div>
-        <span className="product-icon-display">{meta.emoji}</span>
+        {/* Floating Badges Over Image */}
+        <div className="media-top-chips">
+          <span className="card-category-badge">{meta.category}</span>
+          <span className="card-tag-pill">{meta.tag}</span>
+        </div>
       </div>
 
       <div className="card-content">

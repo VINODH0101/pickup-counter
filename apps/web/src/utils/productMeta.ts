@@ -4,6 +4,7 @@ export interface ProductMeta {
   tag: string;
   emoji: string;
   glowColor: "amber" | "cyan" | "emerald" | "purple" | "rose" | "orange";
+  imageUrl: string;
 }
 
 export const PRODUCT_CATEGORIES = [
@@ -23,6 +24,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Classic Salted",
     emoji: "🥔",
     glowColor: "amber",
+    imageUrl: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=600&q=80",
   },
   "Cookies": {
     category: "Chocolates & Sweets",
@@ -30,6 +32,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Artisan Baked",
     emoji: "🍪",
     glowColor: "orange",
+    imageUrl: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=80",
   },
   "Chocolate bar": {
     category: "Chocolates & Sweets",
@@ -37,6 +40,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Silk Blend",
     emoji: "🍫",
     glowColor: "amber",
+    imageUrl: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80",
   },
   "Juice": {
     category: "Cold Beverages",
@@ -44,6 +48,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Cold Pressed",
     emoji: "🧃",
     glowColor: "orange",
+    imageUrl: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80",
   },
   "Water bottle": {
     category: "Cold Beverages",
@@ -51,6 +56,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Spring Mineral",
     emoji: "💧",
     glowColor: "cyan",
+    imageUrl: "https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=600&q=80",
   },
   "Roasted Almonds & Cashews": {
     category: "Healthy & Energy",
@@ -58,6 +64,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "High Protein",
     emoji: "🥜",
     glowColor: "emerald",
+    imageUrl: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=600&q=80",
   },
   "Artisanal Dark Chocolate 72%": {
     category: "Chocolates & Sweets",
@@ -65,6 +72,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "72% Cocoa",
     emoji: "🍫",
     glowColor: "purple",
+    imageUrl: "https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=600&q=80",
   },
   "Sparkling Berry Kombucha": {
     category: "Cold Beverages",
@@ -72,6 +80,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Probiotic Fizz",
     emoji: "🍇",
     glowColor: "rose",
+    imageUrl: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
   },
   "Truffle Potato Crisps": {
     category: "Savory & Crisps",
@@ -79,6 +88,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Black Truffle",
     emoji: "🥔",
     glowColor: "amber",
+    imageUrl: "https://images.unsplash.com/photo-1527842891421-42eec6e703ea?auto=format&fit=crop&w=600&q=80",
   },
   "Cold Brew Nitro Coffee": {
     category: "Cold Beverages",
@@ -86,6 +96,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Nitro Infused",
     emoji: "☕",
     glowColor: "cyan",
+    imageUrl: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80",
   },
   "Roasted Peri-Peri Makhana": {
     category: "Healthy & Energy",
@@ -93,6 +104,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "Superfood",
     emoji: "🍿",
     glowColor: "rose",
+    imageUrl: "https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=600&q=80",
   },
   "Organic Granola Honey Bar": {
     category: "Healthy & Energy",
@@ -100,6 +112,7 @@ const META_MAP: Record<string, ProductMeta> = {
     tag: "All Natural",
     emoji: "🌾",
     glowColor: "emerald",
+    imageUrl: "https://images.unsplash.com/photo-1622484212850-cab596d63428?auto=format&fit=crop&w=600&q=80",
   },
 };
 
@@ -117,6 +130,7 @@ export function getProductMeta(name: string): ProductMeta {
       tag: "Chilled",
       emoji: "🥤",
       glowColor: "cyan",
+      imageUrl: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
     };
   }
   if (lower.includes("choc") || lower.includes("cookie") || lower.includes("sweet") || lower.includes("cake") || lower.includes("biscuit")) {
@@ -126,6 +140,7 @@ export function getProductMeta(name: string): ProductMeta {
       tag: "Confection",
       emoji: "🍫",
       glowColor: "amber",
+      imageUrl: "https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=600&q=80",
     };
   }
   if (lower.includes("nut") || lower.includes("almond") || lower.includes("cashew") || lower.includes("seed") || lower.includes("granola") || lower.includes("makhana")) {
@@ -135,6 +150,7 @@ export function getProductMeta(name: string): ProductMeta {
       tag: "Nutritious",
       emoji: "🥜",
       glowColor: "emerald",
+      imageUrl: "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=600&q=80",
     };
   }
   return {
@@ -143,5 +159,6 @@ export function getProductMeta(name: string): ProductMeta {
     tag: "Gourmet Snack",
     emoji: "🍿",
     glowColor: "amber",
+    imageUrl: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=600&q=80",
   };
 }
