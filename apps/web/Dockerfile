@@ -10,7 +10,7 @@ COPY apps/web/package.json ./apps/web/
 RUN npm ci
 
 # Copy web app sources
-COPY tsconfig.json ./
+COPY tsconfig.base.json ./
 COPY apps/web ./apps/web
 
 # Build Vite React production bundle

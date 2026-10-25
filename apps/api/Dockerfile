@@ -10,7 +10,7 @@ COPY apps/web/package.json ./apps/web/
 RUN npm ci
 
 # Copy API sources
-COPY tsconfig.json ./
+COPY tsconfig.base.json ./
 COPY apps/api ./apps/api
 
 # Compile TypeScript to dist/
@@ -24,6 +24,7 @@ ENV NODE_ENV=production
 
 COPY package.json package-lock.json ./
 COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
 
 # Install only production dependencies
 RUN npm ci --omit=dev
